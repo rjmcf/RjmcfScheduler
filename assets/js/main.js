@@ -92,6 +92,14 @@ function setAvailable(cellId)
 
 function submit()
 {
+	const nameInput = document.getElementById("nameInput");
+	const username = nameInput.value.trim();
+	if (username === "")
+	{
+		alert("Please enter your name!");
+		return;
+	}
+
 	let isValid = true;
 	let invalidDayIndices = [];
 	let sameTimeIndices = [];
@@ -147,7 +155,14 @@ function submit()
 
 	if (isValid)
 	{
-		console.log(results);
+		const output =
+		{
+			name: username,
+			firstDay: firstDay,
+			availability: results
+		};
+		const outputString = JSON.stringify(output);
+		console.log(outputString);
 	}
 	else
 	{
