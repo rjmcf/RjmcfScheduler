@@ -110,6 +110,7 @@ function submit()
 	let results = [];
 	for (let i = 0; i < numDays; i++)
 	{
+		// Update counters
 		if (i>0)
 		{
 			dayNum = (dayNum+1)%7;
@@ -118,6 +119,15 @@ function submit()
 	  	{
 	  		weekNum++;
 	  	}
+
+		// If we're skipping this day, they aren't available
+		if (dayIndicesToSkip.includes(i))
+		{
+			results.push({available:false});
+			continue;
+		}
+
+		// If they didn't tick Available, they aren't available
 		const cellId = `Day${weekNum}${dayNum}`;
 		const checkBox = document.getElementById(`${cellId}Check`);
 		if (checkBox.checked == false)
@@ -129,6 +139,7 @@ function submit()
 		const fromSelector = document.getElementById(`${cellId}From`);
 		const toSelector = document.getElementById(`${cellId}To`);
 
+		// Check for errors in entry
 		if (fromSelector.value === "-" || toSelector.value === "-")
 		{
 			isValid = false;
@@ -150,9 +161,11 @@ function submit()
 			continue;
 		}
 
+		// Other wise record results
 		results.push({available:true, from:fromSelector.value, to:toSelector.value});
 	}
 
+	// If no errors found, send email with results
 	if (isValid)
 	{
 		const output =
@@ -162,7 +175,15 @@ function submit()
 			availability: results
 		};
 		const outputString = JSON.stringify(output);
-		console.log(outputString);
+
+		if (testing)
+		{
+			console.log(outputString);
+		}
+		else
+		{
+			sendEmail(username, outputString);
+		}
 	}
 	else
 	{
@@ -179,6 +200,19 @@ function submit()
 			alertTimesOutOfOrder(timeOutOfOrderIndices);
 		}
 	}
+}
+
+function sendEmail(name, stringToSend)
+{
+	Email.send({
+	SecureToken: "b00bcbe9-87ac-4e39-9fda-2e1019b848c7",
+	To : 'rjmcf@live.co.uk',
+	From : "rjmcf.scheduler@gmail.com",
+	Subject : `${name}'s Availability`,
+	Body : stringToSend,
+	}).then(
+		message => alert(`Availability submitted successfully. Thanks ${name}!`)
+	);
 }
 
 function alertInvalidDays(invalidDayIndices)
@@ -249,15 +283,18 @@ window.onload = function()
 		const elementToAddTo = document.getElementById(id);
 		elementToAddTo.appendChild(para);
 
-		const checkBoxLine = document.createElement("p");
-		checkBoxLine.appendChild(document.createTextNode("Available"));
-		const check = document.createElement("input");
-		check.id = id + "Check";
-		check.type = "checkbox";
-		check.onclick = function() { setAvailable(id); }
-		checkBoxLine.appendChild(check);
-		elementToAddTo.appendChild(checkBoxLine);
+		if (!dayIndicesToSkip.includes(i))
+		{
+			const checkBoxLine = document.createElement("p");
+			checkBoxLine.appendChild(document.createTextNode("Available"));
+			const check = document.createElement("input");
+			check.id = id + "Check";
+			check.type = "checkbox";
+			check.onclick = function() { setAvailable(id); }
+			checkBoxLine.appendChild(check);
+			elementToAddTo.appendChild(checkBoxLine);
 
-		createNewTimeSelect(id);
+			createNewTimeSelect(id);
+		}
 	}
 };
