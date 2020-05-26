@@ -32,7 +32,8 @@ layout: page
       const firstDay = new Date(2020, 4, 28);
       const numDays = 13;
       const dayIndicesToSkip = [6,10];
-      const testing = true;
+      const disableEmails = false;
+      const printToConsole = true;
     </script>
 
     <!-- Script allows me to send emails using frontend js only -->

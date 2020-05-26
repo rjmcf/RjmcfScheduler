@@ -176,11 +176,12 @@ function submit()
 		};
 		const outputString = JSON.stringify(output);
 
-		if (testing)
+		if (printToConsole)
 		{
 			console.log(outputString);
 		}
-		else
+
+		if (!disableEmails)
 		{
 			sendEmail(username, outputString);
 		}
