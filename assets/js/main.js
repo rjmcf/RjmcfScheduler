@@ -296,7 +296,7 @@ window.onload = function()
 		if (!dayIndicesToSkip.includes(i))
 		{
 			const checkBoxLine = document.createElement("p");
-			checkBoxLine.appendChild(document.createTextNode("Available"));
+			checkBoxLine.appendChild(document.createTextNode("Free"));
 			const check = document.createElement("input");
 			check.id = id + "Check";
 			check.type = "checkbox";

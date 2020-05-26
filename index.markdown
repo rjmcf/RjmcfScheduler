@@ -7,7 +7,13 @@ layout: page
   </head>
   <body>   
 
-    <table style="table-layout:fixed;width:100%" id="dateTable">
+  <p style = "margin-bottom: 1cm">
+    Enter Name
+    <input type = "text" id = "nameInput">
+  </p>
+
+  <div class="table-wrapper">
+    <table style="table-layout:fixed; min-width:600px;" id="dateTable">
       <tr>
         <th>Mon</th>
         <th>Tue</th>
@@ -18,9 +24,8 @@ layout: page
         <th>Sun</th>
       </tr>
     </table>
+  </div>
 
-    Enter Name <input type = "text" id = "nameInput">
-    <br>
     <!--<form method="post">-->
 		<input type="button" value="Submit" onclick="submit()"/>
 	<!--</form>-->

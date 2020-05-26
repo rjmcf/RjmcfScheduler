@@ -2,3 +2,7 @@ td {
   height: 190px;
   vertical-align: top;
 }
+
+.table-wrapper {
+  overflow-x: scroll;
+}
