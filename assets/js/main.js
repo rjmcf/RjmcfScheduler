@@ -205,7 +205,7 @@ function submit()
 function sendEmail(name, stringToSend)
 {
 	Email.send({
-	SecureToken: "b00bcbe9-87ac-4e39-9fda-2e1019b848c7",
+	SecureToken: "4677384b-9037-468d-b683-b7dd5fa3a9e4",
 	To : 'rjmcf@live.co.uk',
 	From : "rjmcf.scheduler@gmail.com",
 	Subject : `${name}'s Availability`,
