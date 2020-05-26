@@ -28,7 +28,7 @@ layout: page
     <script>
       const firstDay = new Date(2020, 4, 27);
       const numDays = 14;
-      const dayIndicesToSkip = [3];
+      const dayIndicesToSkip = [];
       const testing = false;
     </script>
 
