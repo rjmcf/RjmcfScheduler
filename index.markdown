@@ -26,15 +26,13 @@ layout: page
     </table>
   </div>
 
-    <!--<form method="post">-->
-		<input type="button" value="Submit" onclick="submit()"/>
-	<!--</form>-->
+    <input type="button" value="Submit" onclick="submit()"/>
 
     <script>
-      const firstDay = new Date(2020, 4, 27);
-      const numDays = 14;
-      const dayIndicesToSkip = [];
-      const testing = false;
+      const firstDay = new Date(2020, 4, 28);
+      const numDays = 13;
+      const dayIndicesToSkip = [6,10];
+      const testing = true;
     </script>
 
     <!-- Script allows me to send emails using frontend js only -->
