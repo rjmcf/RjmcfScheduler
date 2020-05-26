@@ -211,7 +211,17 @@ function sendEmail(name, stringToSend)
 	Subject : `${name}'s Availability`,
 	Body : stringToSend,
 	}).then(
-		message => alert(`Availability submitted successfully. Thanks ${name}!`)
+		message =>
+		{
+			if (message === "OK")
+			{
+				alert(`Availability submitted successfully. Thanks ${name}!`);
+			}
+			else
+			{
+				alert(`"${message}"\nHmmm, looks like there's been a problem! Let Robin know and send him a screenshot of this error!`);
+			}
+		}
 	);
 }
 
