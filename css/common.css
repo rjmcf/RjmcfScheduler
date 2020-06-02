@@ -3,6 +3,11 @@ td {
   vertical-align: top;
 }
 
+.cell-wrapper {
+    height: 110px;
+    overflow-y: scroll;
+}
+
 .table-wrapper {
   overflow-x: scroll;
 }

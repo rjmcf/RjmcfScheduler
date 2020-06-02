@@ -1,3 +1,5 @@
+let numTimes = {};
+
 function createDropDown(id)
 {
 	const select = document.createElement("select");
@@ -31,22 +33,42 @@ function createDropDown(id)
 
 function createNewTimeSelect(idToAddTo)
 {
-	const para = document.createElement("p");
-	para.id = idToAddTo + "Selector";
-	para.style.display = "none";
+	const timeIndex = numTimes[idToAddTo];
 
-	const selectFrom = createDropDown(`${idToAddTo}From`);
+	const para = document.createElement("p");
+	para.id = `${idToAddTo}Selector${timeIndex}`;
+
+	if (timeIndex > 0)
+	{
+		para.appendChild(document.createTextNode("and"));
+	}
+
+	const selectFrom = createDropDown(`${idToAddTo}From${timeIndex}`);
 
 	para.appendChild(selectFrom);
 
 	const toText = document.createTextNode(" 'till ");
 	para.appendChild(toText);
 
-	const selectTo = createDropDown(`${idToAddTo}To`);
+	const selectTo = createDropDown(`${idToAddTo}To${timeIndex}`);
 
 	para.appendChild(selectTo);
 
-	document.getElementById(idToAddTo).appendChild(para);
+	if (timeIndex > 0)
+	{
+		const deleteButton = document.createElement("button");
+		deleteButton.appendChild(document.createTextNode("Delete"));
+		deleteButton.onclick = function()
+		{
+			const paraToDelete = document.getElementById(`${idToAddTo}Selector${timeIndex}`);
+			paraToDelete.parentNode.removeChild(paraToDelete);
+		}
+		para.appendChild(deleteButton);
+	}
+
+	document.getElementById(`${idToAddTo}Selectors`).appendChild(para);
+
+	numTimes[idToAddTo]++;
 }
 
 function addDays(date, days)
@@ -74,7 +96,7 @@ function setUpTable(numWeeks)
 
 function setAvailable(cellId)
 {
-	const selectorId = cellId + "Selector";
+	const selectorId = cellId + `Scroll`;
 	const selector = document.getElementById(selectorId);
 
 	const checkboxId = cellId + "Check";
@@ -136,33 +158,45 @@ function submit()
 			continue;
 		}
 
-		const fromSelector = document.getElementById(`${cellId}From`);
-		const toSelector = document.getElementById(`${cellId}To`);
+		let result = {available:true, times:[]};
 
-		// Check for errors in entry
-		if (fromSelector.value === "-" || toSelector.value === "-")
+		for (let timeIndex = 0; timeIndex < numTimes[cellId]; timeIndex++)
 		{
-			isValid = false;
-			invalidDayIndices.push(i);
-			continue;
+			const fromSelector = document.getElementById(`${cellId}From${timeIndex}`);
+			const toSelector = document.getElementById(`${cellId}To${timeIndex}`);
+
+			if (fromSelector === null || toSelector === null)
+			{
+				continue;
+			}
+
+			// Check for errors in entry
+			if (fromSelector.value === "-" || toSelector.value === "-")
+			{
+				isValid = false;
+				invalidDayIndices.push(i);
+				continue;
+			}
+
+			if (fromSelector.value === toSelector.value)
+			{
+				isValid = false;
+				sameTimeIndices.push(i);
+				continue;
+			}
+
+			if (fromSelector.value > toSelector.value && toSelector.value !== "00:00")
+			{
+				isValid = false;
+				timeOutOfOrderIndices.push(i);
+				continue;
+			}
+
+			// Other wise record results
+			result["times"].push({from:fromSelector.value, to:toSelector.value});
 		}
 
-		if (fromSelector.value === toSelector.value)
-		{
-			isValid = false;
-			sameTimeIndices.push(i);
-			continue;
-		}
-
-		if (fromSelector.value > toSelector.value && toSelector.value !== "00:00")
-		{
-			isValid = false;
-			timeOutOfOrderIndices.push(i);
-			continue;
-		}
-
-		// Other wise record results
-		results.push({available:true, from:fromSelector.value, to:toSelector.value});
+		results.push(result);
 	}
 
 	// If no errors found, send email with results
@@ -301,11 +335,27 @@ window.onload = function()
 			const check = document.createElement("input");
 			check.id = id + "Check";
 			check.type = "checkbox";
-			check.onclick = function() { setAvailable(id); }
+			check.onclick = function() { setAvailable(id); };
 			checkBoxLine.appendChild(check);
 			elementToAddTo.appendChild(checkBoxLine);
 
+			numTimes[id] = 0;
+			const scrollDiv = document.createElement("div");
+			scrollDiv.style.display = "none";
+			scrollDiv.id = `${id}Scroll`;
+			scrollDiv.className = "cell-wrapper";
+
+			const selectorDiv = document.createElement("div");
+			selectorDiv.id = `${id}Selectors`;
+			scrollDiv.appendChild(selectorDiv);
+			elementToAddTo.appendChild(scrollDiv);
+
 			createNewTimeSelect(id);
+
+			const addSelectorButton = document.createElement("button");
+			addSelectorButton.appendChild(document.createTextNode("Add Times"));
+			addSelectorButton.onclick = function() {createNewTimeSelect(id); };
+			scrollDiv.appendChild(addSelectorButton);
 		}
 	}
 };
