@@ -13,7 +13,7 @@ layout: page
   </p>
 
   <div class="table-wrapper">
-    <table style="table-layout:fixed; min-width:600px;" id="dateTable">
+    <table style="table-layout:fixed; min-width:800px;" id="dateTable">
       <tr>
         <th>Mon</th>
         <th>Tue</th>
