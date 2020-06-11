@@ -29,10 +29,10 @@ layout: page
     <input type="button" value="Submit" onclick="submit()"/>
 
     <script>
-      const firstDay = new Date(2020, 4, 25);
-      const numDays = 7;
-      const dayIndicesToSkip = [];
-      const disableEmails = true;
+      const firstDay = new Date(2020, 5, 13);
+      const numDays = 16;
+      const dayIndicesToSkip = [4,5,11];
+      const disableEmails = false;
       const printToConsole = true;
     </script>
 
