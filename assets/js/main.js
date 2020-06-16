@@ -1,4 +1,6 @@
 let numTimes = {};
+let emailReportTextNode;
+let submitButton;
 
 function createDropDown(id)
 {
@@ -239,6 +241,9 @@ function submit()
 
 function sendEmail(name, stringToSend)
 {
+	emailReportTextNode.nodeValue = "Sending...";
+	submitButton.disabled = true;
+
 	Email.send({
 	SecureToken: "4be1c4e8-32e9-4820-8ef1-78ff280be5f6",
 	To : 'rjmcf@live.co.uk',
@@ -250,14 +255,30 @@ function sendEmail(name, stringToSend)
 		{
 			if (message === "OK")
 			{
-				alert(`Availability submitted successfully. Thanks ${name}!`);
+				reportEmailSuccess(name);
 			}
 			else
 			{
-				alert(`"${message}"\nHmmm, looks like there's been a problem! Let Robin know and send him a screenshot of this error!`);
+				reportEmailFail(name, message);
 			}
 		}
 	);
+}
+
+function reportEmailSuccess(name)
+{
+	alert(`Availability submitted successfully. Thanks ${name}!`);
+
+	emailReportTextNode.nodeValue = `Data sent successfully, thanks ${name}!`;
+	submitButton.disabled = false;
+}
+
+function reportEmailFail(name, message)
+{
+	alert(`"${message}"\nHmmm, looks like there's been a problem! Let Robin know and send him a screenshot of this error!`);
+
+	emailReportTextNode.nodeValue = `Uh oh! Something went wrong! Please send Robin the following message: "${message}".`;
+	submitButton.disabled = false;
 }
 
 function alertInvalidDays(invalidDayIndices)
@@ -298,6 +319,12 @@ function addDaysToString(string, dayIndices)
 
 window.onload = function()
 {
+	emailReportTextNode = document.createTextNode("");
+	const textPara = document.getElementById("emailReport");
+	textPara.appendChild(emailReportTextNode);
+
+	submitButton = document.getElementById("submitButton");
+
 	// To fix JS handling of mods of -ve numbers
 	let dayNum = (((firstDay.getDay() - 1)%7)+7)%7;
 	// -1 to avoid double counting first day, +1 to make weeks 1-indexed

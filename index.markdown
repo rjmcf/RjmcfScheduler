@@ -26,7 +26,8 @@ layout: page
     </table>
   </div>
 
-    <input type="button" value="Submit" onclick="submit()"/>
+    <input type="button" value="Submit" onclick="submit()" id="submitButton"/>
+    <p id="emailReport"></p>
 
     <script>
       const firstDay = new Date(2020, 5, 13);
