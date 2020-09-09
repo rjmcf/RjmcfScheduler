@@ -1,6 +1,9 @@
 let numTimes = {};
 let textPara;
 let submitButton;
+let duplicateDayModal;
+let duplicateDayModalContent;
+let duplicateDayModalCloseButton;
 const dateTimeFormat = new Intl.DateTimeFormat('en', {month: 'short', day: '2-digit'});
 
 function createDropDown(id)
@@ -72,6 +75,92 @@ function createNewTimeSelect(idToAddTo)
 	document.getElementById(`${idToAddTo}Selectors`).appendChild(para);
 
 	numTimes[idToAddTo]++;
+}
+
+function showDuplicateDayModal(idToChange)
+{
+	duplicateDayModal.style.display = "block";
+
+	emptyElement(duplicateDayModalContent);
+
+	duplicateDayModalContent.appendChild(document.createTextNode("Choose the day to duplicate"));
+	duplicateDayModalContent.appendChild(document.createElement("br"));
+
+	let week = 0;
+
+	for (let i = 0; i < numDays; i++)
+	{
+		const currentDay = addDays(firstDay, i);
+		// To fix JS handling of mods of -ve numbers
+	  	dayNum = (((currentDay.getDay() - 1)%7)+7)%7;
+
+	  	if (dayNum == 0 && i > 0)
+	  	{
+	  		week++;
+	  	}
+
+		if (dayIndicesToSkip.includes(i))
+		{
+			continue;
+		}
+
+		const currentId = "Day" + week + dayNum;
+
+		if (idToChange === currentId)
+		{
+			continue;
+		}
+
+		const [{ value: month },,{ value: day }] = dateTimeFormat.formatToParts(currentDay);
+
+		const dayButton = document.createElement("button");
+		dayButton.appendChild(document.createTextNode(`${day} ${month}`));
+		dayButton.onclick = function() { makeXLikeY(idToChange, currentId); };
+		duplicateDayModalContent.appendChild(dayButton);
+	}
+}
+
+function makeXLikeY(idToChange, idToCopy)
+{
+	duplicateDayModal.style.display = "none";
+	console.log(`Making ${idToChange} like ${idToCopy}`);
+
+	const checkBoxToCopy = document.getElementById(`${idToCopy}Check`);
+	const checkBoxToChange = document.getElementById(`${idToChange}Check`);
+	checkBoxToChange.checked = checkBoxToCopy.checked;
+	setAvailable(idToChange);
+
+	emptyElement(document.getElementById(`${idToChange}Selectors`));
+	numTimes[idToChange] = 0;
+
+	for (let timeIndex = 0; timeIndex < numTimes[idToCopy]; timeIndex++)
+	{
+		const fromSelectorToCopy = document.getElementById(`${idToCopy}From${timeIndex}`);
+		const toSelectorToCopy = document.getElementById(`${idToCopy}To${timeIndex}`);
+
+		createNewTimeSelect(idToChange);
+
+		if (fromSelectorToCopy === null || toSelectorToCopy === null)
+		{
+			const paraToDelete = document.getElementById(`${idToChange}Selector${timeIndex}`);
+			paraToDelete.parentNode.removeChild(paraToDelete);
+			continue;
+		}
+
+		const fromSelectorToChange = document.getElementById(`${idToChange}From${timeIndex}`);
+		const toSelectorToChange = document.getElementById(`${idToChange}To${timeIndex}`);
+
+		fromSelectorToChange.value = fromSelectorToCopy.value;
+		toSelectorToChange.value = toSelectorToCopy.value;
+	}
+}
+
+function emptyElement(element)
+{
+	while (element.firstChild)
+	{
+		element.removeChild(element.firstChild);
+	}
 }
 
 function addDays(date, days)
@@ -308,7 +397,7 @@ function processData()
 	{
 		output.comments = comments;
 	}
-	
+
 	const outputString = JSON.stringify(output);
 
 	if (printToConsole)
@@ -501,6 +590,15 @@ window.onload = function()
 
 	submitButton = document.getElementById("submitButton");
 
+	duplicateDayModal = document.getElementById("duplicateDayModal");
+	duplicateDayModalContent = document.getElementById("duplicateDayModalContent");
+	duplicateDayModalCloseButton = document.getElementById("duplicateDayModalCloseButton");
+
+	// When the user clicks on <span> (x), close the modal
+	duplicateDayModalCloseButton.onclick = function() {
+	  duplicateDayModal.style.display = "none";
+	};
+
 	// To fix JS handling of mods of -ve numbers
 	let dayNum = (((firstDay.getDay() - 1)%7)+7)%7;
 	// -1 to avoid double counting first day, +1 to make weeks 1-indexed
@@ -532,6 +630,11 @@ window.onload = function()
 
 		if (!dayIndicesToSkip.includes(i))
 		{
+			const duplicateDayButton = document.createElement("button");
+			duplicateDayButton.appendChild(document.createTextNode("Make Like..."));
+			duplicateDayButton.onclick = function() { showDuplicateDayModal(id); };
+			elementToAddTo.appendChild(duplicateDayButton);
+
 			const checkBoxLine = document.createElement("p");
 			checkBoxLine.appendChild(document.createTextNode("Free"));
 			const check = document.createElement("input");
@@ -560,4 +663,11 @@ window.onload = function()
 			scrollDiv.appendChild(addSelectorButton);
 		}
 	}
+};
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == duplicateDayModal) {
+    duplicateDayModal.style.display = "none";
+  }
 };

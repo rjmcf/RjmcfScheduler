@@ -36,6 +36,15 @@ layout: page
     <input type="button" value="Submit" onclick="submit()" id="submitButton"/>
     <p id="emailReport"></p>
 
+    <!-- Dialog to allow users to duplicate days -->
+    <div id="duplicateDayModal" class="modal">
+      <div class="modal-content">
+        <span id="duplicateDayModalCloseButton" class="close">&times;</span>
+        <div id="duplicateDayModalContent">
+        </div>
+      </div>
+    </div>
+
     <script>
       const firstDay = new Date(2020, 8, 11);
       const numDays = 15;
