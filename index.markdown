@@ -30,9 +30,9 @@ layout: page
     <p id="emailReport"></p>
 
     <script>
-      const firstDay = new Date(2020, 8, 9);
-      const numDays = 12;
-      const dayIndicesToSkip = [];
+      const firstDay = new Date(2020, 8, 11);
+      const numDays = 15;
+      const dayIndicesToSkip = [3, 6, 10, 13];
       const disableEmails = false;
       const printToConsole = true;
     </script>
