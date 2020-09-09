@@ -295,12 +295,20 @@ function processData()
 	const nameInput = document.getElementById("nameInput");
 	const username = nameInput.value.trim();
 
+	const commentsInput =  document.getElementById("comments");
+	const comments = commentsInput.value.trim();
+
 	const output =
 	{
 		name: username,
 		firstDay: firstDay,
 		availability: results
 	};
+	if (comments)
+	{
+		output.comments = comments;
+	}
+	
 	const outputString = JSON.stringify(output);
 
 	if (printToConsole)

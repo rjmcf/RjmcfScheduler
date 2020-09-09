@@ -26,6 +26,13 @@ layout: page
     </table>
   </div>
 
+  <div>
+    <label for="comments">Comments:</label>
+    <div>
+      <textarea id="comments" name="comments" rows="5" style="width: 100%; max-width: 100%;"></textarea>
+    </div>
+  </div>
+
     <input type="button" value="Submit" onclick="submit()" id="submitButton"/>
     <p id="emailReport"></p>
 
