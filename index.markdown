@@ -46,9 +46,9 @@ layout: page
     </div>
 
     <script>
-      const firstDay = new Date(2020, 8, 11);
-      const numDays = 15;
-      const dayIndicesToSkip = [3, 6, 10, 13];
+      const firstDay = new Date(2020, 8, 28);
+      const numDays = 14;
+      const dayIndicesToSkip = [0, 2,9];
       const disableEmails = false;
       const printToConsole = true;
     </script>
