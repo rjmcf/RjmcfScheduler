@@ -46,8 +46,8 @@ layout: page
     </div>
 
     <script>
-      const firstDay = new Date(2021, 4, 10);
-      const numDays = 14;
+      const firstDay = new Date(2021, 6, 11);
+      const numDays = 12;
       const dayIndicesToSkip = [];
       const disableEmails = false;
       const printToConsole = true;
